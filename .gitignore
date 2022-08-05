@@ -1,4 +1,5 @@
 users/*
+data/*
 tracker.json
 .env
 config.json

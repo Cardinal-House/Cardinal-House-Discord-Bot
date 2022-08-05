@@ -5,11 +5,16 @@ import json
 import datetime
 
 from BotPrograms.TokenStatistics import *
+from BotPrograms.CardinalPoints import *
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-adminUsers = ["colepm#6118", "Zachlm#3699"]
+adminUsersDefault = ["colepm#6118", "Zachlm#3699"]
+# levelBot = "THE CARDINAL#6089"
+levelBot = "colepm#6118"
+levelMessageFull = "GG @user, you just advanced to level [level]!"
+levelMessage = "you just advanced to level"
 
 @client.event
 async def on_ready():
@@ -17,6 +22,24 @@ async def on_ready():
 
     # print("Generating token statistics.")
     # await callGenerateTokenStatistics()
+
+def isAdmin(user):
+    if os.path.exists("data/admins.json"):
+        with open("data/admins.json", 'r') as adminFile:
+            adminJson = json.load(adminFile)
+
+        adminUsers = adminJson["admins"]
+
+        if user in adminUsers:
+            return True
+    else:
+        with open("data/admins.json", 'w') as adminFile:
+            json.dump({"admins": adminUsersDefault}, adminFile)
+        
+        if user in adminUsersDefault:
+            return True
+    
+    return False
 
 # Stops users from sending too many messages.
 # No more than 2 messages per 10 seconds.
@@ -62,6 +85,23 @@ async def rateLimit(message, userJson):
                 return True
 
 @client.event
+async def on_reaction_add(reaction, user):
+    await userReactionAdd(reaction, user, client)
+
+@client.event
+async def on_reaction_remove(reaction, user):
+    await userReactionRemove(reaction, user, client)
+
+@client.event
+async def on_voice_state_update(member, before, after):
+    if not os.path.isfile(f"users/{member}.json"):
+        userFile = open(f"users/{member}.json", 'w')
+        userFile.write("{}")
+        userFile.close()
+
+    await handleUserVoiceStateChange(member, before, after)
+
+@client.event
 async def on_message(message):
     if message.author == client.user:
         return
@@ -72,6 +112,14 @@ async def on_message(message):
         userFile = open(f"users/{messageAuthor}.json", 'w')
         userFile.write("{}")
         userFile.close()
+
+    if not os.path.exists("data/currentEvent.json"):
+        with open("data/currentEvent.json", 'w') as eventFile:
+            json.dump({}, eventFile)
+
+    if str(message.author) == levelBot and levelMessage in message.content:
+        await trackLevelUp(message)
+        return
 
     # Makes sure the user isn't sending too many messages.
     if message.content.startswith("$"):
@@ -87,6 +135,59 @@ async def on_message(message):
 
         if rateLimited:
             return
+
+    if message.content.startswith('$start-event'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+        else:
+            await startEvent(message)
+
+    if message.content.startswith('$end-event'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+        else:
+            await endEvent(message)
+
+    if message.content.startswith('$cardinal-points') or message.content.startswith('$points') or message.content.startswith('$cardinalpoints'):
+        await viewCardinalPoints(message)
+
+    if message.content.startswith('$top-points') or message.content.startswith('$cardinal-point-scoreboard') or message.content.startswith('$point-scoreboard') or message.content.startswith('$scoreboard'):
+        await viewCardinalPointScoreBoard(message)
+
+    if message.content.startswith('$set-cardinal-points') or message.content.startswith('$set-points'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+            return
+
+        await setCardinalPoints(message, "set")
+
+    if message.content.startswith('$increase-cardinal-points') or message.content.startswith('$increase-points'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+            return
+
+        await setCardinalPoints(message, "increase")
+
+    if message.content.startswith('$decrease-cardinal-points') or message.content.startswith('$decrease-points'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+            return
+
+        await setCardinalPoints(message, "decrease")
+
+    if message.content.startswith('$add-admin') or message.content.startswith('$remove-admin'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+            return
+
+        await addOrRemoveAdminUser(message)
+    
+    if message.content.startswith("$get-user-report"):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+            return
+
+        await getUserReport(message)
 
     if message.content.startswith('$hello'):
         await message.channel.send('Greetings from the Cardinal House bot!')

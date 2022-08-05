@@ -10,7 +10,8 @@ import threading
 
 API_KEY = os.environ["CovalenthqApiKey"]
 CONTRACT_ADDRESS = os.environ["CovalenthqContractAddress"]
-defaultChannelId = os.environ["CardinalHouseBotMessageChannelId"]
+# defaultChannelId = os.environ["CardinalHouseBotMessageChannelId"]
+defaultChannelId = 0
 CHAIN_ID = 56
 CONTRACT_ABI = '[{"inputs": [{"internalType": "address","name": "account","type": "address"}],"name": "balanceOf","outputs": [{"internalType": "uint256","name": "","type": "uint256"}],"stateMutability": "view","type": "function"}]'
 BINANCE_RPC_URL = "https://bsc-dataseed.binance.org/"
