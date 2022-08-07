@@ -142,25 +142,25 @@ async def on_message(message):
         if rateLimited:
             return
 
-    if message.content.startswith('$set-react-message'):
+    if message.content.startswith('$react-set'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
         else:
             await setReactMessage(message)
 
-    if message.content.startswith('$clear-react-messages'):
+    if message.content.startswith('$react-clear'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
         else:
             await clearReactMessages(message)
 
-    if message.content.startswith('$start-event'):
+    if message.content.startswith('$event-start'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
         else:
             await startEvent(message)
 
-    if message.content.startswith('$end-event'):
+    if message.content.startswith('$event-end'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
         else:
@@ -172,35 +172,35 @@ async def on_message(message):
     if message.content.startswith('$top-points') or message.content.startswith('$cardinal-point-scoreboard') or message.content.startswith('$point-scoreboard') or message.content.startswith('$scoreboard'):
         await viewCardinalPointScoreBoard(message)
 
-    if message.content.startswith('$set-cardinal-points') or message.content.startswith('$set-points'):
+    if message.content.startswith('$cardinal-points-set') or message.content.startswith('$points-set'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
             return
 
         await setCardinalPoints(message, "set")
 
-    if message.content.startswith('$increase-cardinal-points') or message.content.startswith('$increase-points'):
+    if message.content.startswith('$cardinal-points-increase') or message.content.startswith('$points-increase'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
             return
 
         await setCardinalPoints(message, "increase")
 
-    if message.content.startswith('$decrease-cardinal-points') or message.content.startswith('$decrease-points'):
+    if message.content.startswith('$cardinal-points-decrease') or message.content.startswith('$points-decrease'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
             return
 
         await setCardinalPoints(message, "decrease")
 
-    if message.content.startswith('$add-admin') or message.content.startswith('$remove-admin'):
+    if message.content.startswith('$admin-add') or message.content.startswith('$admin-remove'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
             return
 
         await addOrRemoveAdminUser(message)
     
-    if message.content.startswith("$get-user-report"):
+    if message.content.startswith("$get-report"):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
             return
@@ -218,16 +218,16 @@ async def on_message(message):
 
     if message.content.startswith("$help-admin"):
         messageStr = "Cardinal Points Bot Commands for Admins (see $help for non-admin commands):\n\n"
-        messageStr += "$start-event - Starts an event in your current voice/stage channel where Cardinal Points are given to those who attend\n"
-        messageStr += "$end-event - Ends the current event\n"
-        messageStr += "$set-react-message - Tags a message so that members who react to it get a Cardinal Point\n"
-        messageStr += "$clear-react-messages - Empties the list of messages members can react to to earn Cardinal Points\n"
-        messageStr += "$set-cardinal-points [@user or user#1234] [number of points] - Sets the number of Cardinal Points a user has\n"
-        messageStr += "$increase-cardinal-points [@user or user#1234] [number of points] - Increases the number of Cardinal Points a user has\n"
-        messageStr += "$decrease-cardinal-points [@user or user#1234] [number of points] - Decreases the number of Cardinal Points a user has\n"
-        messageStr += "$add-admin [@user or user#1234] - Adds a user as a Cardinal House admin for executing admin commands\n"
-        messageStr += "$remove-admin [@user or user#1234] - Removes a user from the list of Cardinal House admins for executing admin commands\n"
-        messageStr += "$get-user-report - Generates a CSV file with all the Cardinal Point data for all members\n"
+        messageStr += "$admin-add [@user or user#1234] - Adds a user as a Cardinal House admin for executing admin commands\n"
+        messageStr += "$admin-remove [@user or user#1234] - Removes a user from the list of Cardinal House admins for executing admin commands\n"
+        messageStr += "$event-start - Starts an event in your current voice/stage channel where Cardinal Points are given to those who attend\n"
+        messageStr += "$event-end - Ends the current event\n"
+        messageStr += "$get-report - Generates a CSV file with all the Cardinal Point data for all members\n"
+        messageStr += "$points-set [@user or user#1234] [number of points] - Sets the number of Cardinal Points a user has\n"
+        messageStr += "$points-increase [@user or user#1234] [number of points] - Increases the number of Cardinal Points a user has\n"
+        messageStr += "$points-decrease [@user or user#1234] [number of points] - Decreases the number of Cardinal Points a user has\n"
+        messageStr += "$react-set - Tags a message so that members who react to it get a Cardinal Point\n"
+        messageStr += "$react-clear - Empties the list of messages members can react to to earn Cardinal Points\n"
 
         await message.channel.send(messageStr)
 

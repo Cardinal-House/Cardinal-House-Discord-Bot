@@ -341,7 +341,7 @@ async def setCardinalPoints(message, operation):
 
 async def addOrRemoveAdminUser(message):
     messageSplit = message.content.split(" ")
-    command = messageSplit[0].split("-")[0]
+    command = messageSplit[0].split("-")[1]
     user = message.mentions
 
     if len(messageSplit) < 2:
