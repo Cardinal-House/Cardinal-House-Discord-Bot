@@ -357,7 +357,7 @@ async def addOrRemoveAdminUser(message):
         adminJson = json.load(adminFile)
 
     if command == "add":
-        adminJson["admins"].append(user)
+        adminJson["admins"].append(str(user))
 
         if type(user) == type(message.author):
             await message.channel.send(f"{user.mention} has been added as a Cardinal House bot admin.")
