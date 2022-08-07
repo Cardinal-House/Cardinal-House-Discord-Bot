@@ -1,5 +1,5 @@
 web3==5.25.0
-discord==1.0.1
-discord.py==1.6.0
+discord==1.7.3
+discord.py==1.7.3
 asyncio==3.4.3
 requests==2.26.0

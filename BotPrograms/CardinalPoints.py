@@ -4,14 +4,48 @@ import os
 import json
 import datetime
 
-NUM_MINUTES_IN_EVENT_FOR_CARDINAL_POINTS = 0.0001
-NUM_CARDINAL_POINTS_FOR_EVENT = 5
+NUM_MINUTES_IN_EVENT_FOR_CARDINAL_POINTS = 10
+NUM_CARDINAL_POINTS_FOR_EVENT = 3
+
+async def setReactMessage(message):
+    messageSplit = message.content.split(" ")
+
+    if len(messageSplit) < 2:
+        await message.channel.send("Incorrect format! To make a message give out Cardinal Points for being reacted to, copy the ID of the message then use the command $set-react-message [message ID]")
+        return
+
+    messageID = messageSplit[1]
+
+    if not os.path.exists("data/reactMessages.json"):
+        with open("data/reactMessages.json", 'w') as reactMessagesFile:
+            json.dump({"messages": []}, reactMessagesFile)
+
+    with open("data/reactMessages.json", 'r') as reactMessagesFile:
+        reactMessages = json.load(reactMessagesFile)
+
+    reactMessages["messages"].append(messageID)
+
+    with open("data/reactMessages.json", 'w') as reactMessagesFile:
+        json.dump(reactMessages, reactMessagesFile)
+
+    await message.channel.send("Members will now earn Cardinal Points when reacting to the specified message.")
+
+async def clearReactMessages(message):
+    with open("data/reactMessages.json", 'r') as reactMessagesFile:
+        reactMessages = json.load(reactMessagesFile)
+
+    reactMessages["messages"] = []
+
+    with open("data/reactMessages.json", 'w') as reactMessagesFile:
+        json.dump(reactMessages, reactMessagesFile)
+
+    await message.channel.send("The list of messages members can react to to earn Cardinal Points has been reset successfully.")
 
 async def startEvent(message):
     userVoiceState = message.author.voice
 
     if not userVoiceState:
-        await message.channel.send("You must join the voice channel for the event before using this command!")
+        await message.channel.send("You must join the voice channel for the event before using this command! Voice state not found.")
         return
 
     eventVoiceChannel = userVoiceState.channel
@@ -44,11 +78,9 @@ async def startEvent(message):
         with open(f"users/{currEventMember}.json", 'w') as userFile:
             json.dump(userJson, userFile)
 
-    await message.channel.send("A new event has started! React to this message for Cardinal points!")
+    await message.channel.send("A new event has started! Everyone who attends the event for at least 10 minutes will receive Cardinal Points.")
 
 async def endEvent(message):
-    eventVoiceChannel = message.author.voice.channel
-
     with open("data/currentEvent.json", 'r') as eventFile:
         eventJson = json.load(eventFile)
 
@@ -123,8 +155,6 @@ async def handleUserVoiceStateChange(member, before, after):
         await handleUserJoinedChannel(member, before, after)
         await handleUserLeftChannel(member, before, after)
 
-
-
 async def trackLevelUp(message):
     level = message.content.split("level ")[1].split("!")[0]
     user = message.mentions[0]
@@ -144,8 +174,18 @@ async def trackLevelUp(message):
 
     await message.channel.send(f"{user}, you have been awarded {level} Cardinal Points for leveling up! You now have {newNumPoints} Cardinal Points.")
 
+def isReactMessage(message):
+    if os.path.exists("data/reactMessages.json"):
+        with open("data/reactMessages.json", 'r') as reactMessagesFile:
+            reactMessages = json.load(reactMessagesFile)
+
+        if "messages" in reactMessages.keys() and str(message.id) in reactMessages["messages"]:
+            return True
+
+    return False
+
 async def userReactionAdd(reaction, user, client):
-    if reaction.message.author != client.user or "React to this message for Cardinal points!" not in str(reaction.message.content):
+    if not isReactMessage(reaction.message):
         return
 
     userReactionCount = 0
@@ -175,7 +215,7 @@ async def userReactionAdd(reaction, user, client):
     await reaction.message.channel.send(f"{user.mention} You have earned a Cardinal Point for reacting to an event notifcation! You now have {newNumPoints} Cardinal Points.")
 
 async def userReactionRemove(reaction, user, client):
-    if reaction.message.author != client.user or "React to this message for Cardinal points!" not in str(reaction.message.content):
+    if not isReactMessage(reaction.message):
         return
 
     userReactionCount = 0

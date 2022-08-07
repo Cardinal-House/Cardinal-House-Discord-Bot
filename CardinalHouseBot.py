@@ -136,6 +136,18 @@ async def on_message(message):
         if rateLimited:
             return
 
+    if message.content.startswith('$set-react-message'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+        else:
+            await setReactMessage(message)
+
+    if message.content.startswith('$clear-react-messages'):
+        if not isAdmin(str(message.author)):
+            await message.channel.send("Only Cardinal House admins can use this command.")
+        else:
+            await clearReactMessages(message)
+
     if message.content.startswith('$start-event'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
@@ -188,6 +200,30 @@ async def on_message(message):
             return
 
         await getUserReport(message)
+
+    if message.content.startswith("$help") and not message.content.startswith("$help-admin"):
+        messageStr = "Cardinal Points Bot Commands:\n\n"
+        messageStr += "$points - see how many Cardinal Points you have\n"
+        messageStr += "$points [@user or user#1234] - see how many Cardinal Points someone else has\n"
+        messageStr += "$scoreboard - see the Cardinal Points scoreboard\n"
+        messageStr += "$help-admin - for Cardinal House admins to see their extended list of commands\n"
+
+        await message.channel.send(messageStr)
+
+    if message.content.startswith("$help-admin"):
+        messageStr = "Cardinal Points Bot Commands for Admins (see $help for non-admin commands):\n\n"
+        messageStr += "$start-event - Starts an event in your current voice/stage channel where Cardinal Points are given to those who attend\n"
+        messageStr += "$end-event - Ends the current event\n"
+        messageStr += "$set-react-message - Tags a message so that members who react to it get a Cardinal Point\n"
+        messageStr += "$clear-react-messages - Empties the list of messages members can react to to earn Cardinal Points\n"
+        messageStr += "$set-cardinal-points [@user or user#1234] [number of points] - Sets the number of Cardinal Points a user has\n"
+        messageStr += "$increase-cardinal-points [@user or user#1234] [number of points] - Increases the number of Cardinal Points a user has\n"
+        messageStr += "$decrease-cardinal-points [@user or user#1234] [number of points] - Decreases the number of Cardinal Points a user has\n"
+        messageStr += "$add-admin [@user or user#1234] - Adds a user as a Cardinal House admin for executing admin commands\n"
+        messageStr += "$remove-admin [@user or user#1234] - Removes a user from the list of Cardinal House admins for executing admin commands\n"
+        messageStr += "$get-user-report - Generates a CSV file with all the Cardinal Point data for all members\n"
+
+        await message.channel.send(messageStr)
 
     if message.content.startswith('$hello'):
         await message.channel.send('Greetings from the Cardinal House bot!')
