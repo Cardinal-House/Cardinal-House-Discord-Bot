@@ -11,8 +11,8 @@ intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
 adminUsersDefault = ["colepm#6118", "Zachlm#3699"]
-# levelBot = "THE CARDINAL#6089"
-levelBot = "colepm#6118"
+levelBot = "THE CARDINAL#6089"
+# levelBot = "colepm#6118"
 levelMessageFull = "GG @user, you just advanced to level [level]!"
 levelMessage = "you just advanced to level"
 
