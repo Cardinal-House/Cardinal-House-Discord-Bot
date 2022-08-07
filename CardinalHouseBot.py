@@ -109,6 +109,12 @@ async def on_message(message):
     # Creates the userfile if necessary.
     messageAuthor = str(message.author).strip("<>:\"/\\|?*")
     if not os.path.isfile(f"users/{messageAuthor}.json"):
+        if not os.path.exists("users"):
+            os.mkdir("users")
+
+        if not os.path.exists("data"):
+            os.mkdir("data")
+
         userFile = open(f"users/{messageAuthor}.json", 'w')
         userFile.write("{}")
         userFile.close()
