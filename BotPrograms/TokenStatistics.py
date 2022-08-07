@@ -8,8 +8,10 @@ import asyncio
 import time
 import threading
 
-API_KEY = os.environ["CovalenthqApiKey"]
-CONTRACT_ADDRESS = os.environ["CovalenthqContractAddress"]
+# API_KEY = os.environ["CovalenthqApiKey"]
+API_KEY = ""
+# CONTRACT_ADDRESS = os.environ["CovalenthqContractAddress"]
+CONTRACT_ADDRESS = ""
 # defaultChannelId = os.environ["CardinalHouseBotMessageChannelId"]
 defaultChannelId = 0
 CHAIN_ID = 56
