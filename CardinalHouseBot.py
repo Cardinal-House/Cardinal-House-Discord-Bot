@@ -148,11 +148,15 @@ async def on_message(message):
         else:
             await setReactMessage(message)
 
+        return
+
     if message.content.startswith('$react-clear'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
         else:
             await clearReactMessages(message)
+
+        return
 
     if message.content.startswith('$event-start'):
         if not isAdmin(str(message.author)):
@@ -160,17 +164,19 @@ async def on_message(message):
         else:
             await startEvent(message)
 
+        return
+
     if message.content.startswith('$event-end'):
         if not isAdmin(str(message.author)):
             await message.channel.send("Only Cardinal House admins can use this command.")
         else:
             await endEvent(message)
 
-    if message.content.startswith('$cardinal-points') or message.content.startswith('$points') or message.content.startswith('$cardinalpoints'):
-        await viewCardinalPoints(message)
+        return
 
     if message.content.startswith('$top-points') or message.content.startswith('$cardinal-point-scoreboard') or message.content.startswith('$point-scoreboard') or message.content.startswith('$scoreboard'):
         await viewCardinalPointScoreBoard(message)
+        return
 
     if message.content.startswith('$cardinal-points-set') or message.content.startswith('$points-set'):
         if not isAdmin(str(message.author)):
@@ -178,6 +184,7 @@ async def on_message(message):
             return
 
         await setCardinalPoints(message, "set")
+        return
 
     if message.content.startswith('$cardinal-points-increase') or message.content.startswith('$points-increase'):
         if not isAdmin(str(message.author)):
@@ -185,6 +192,7 @@ async def on_message(message):
             return
 
         await setCardinalPoints(message, "increase")
+        return
 
     if message.content.startswith('$cardinal-points-decrease') or message.content.startswith('$points-decrease'):
         if not isAdmin(str(message.author)):
@@ -192,6 +200,11 @@ async def on_message(message):
             return
 
         await setCardinalPoints(message, "decrease")
+        return
+
+    if message.content.startswith('$cardinal-points') or message.content.startswith('$points') or message.content.startswith('$cardinalpoints'):
+        await viewCardinalPoints(message)
+        return
 
     if message.content.startswith('$admin-add') or message.content.startswith('$admin-remove'):
         if not isAdmin(str(message.author)):
@@ -199,6 +212,8 @@ async def on_message(message):
             return
 
         await addOrRemoveAdminUser(message)
+
+        return
     
     if message.content.startswith("$get-report"):
         if not isAdmin(str(message.author)):
@@ -207,14 +222,7 @@ async def on_message(message):
 
         await getUserReport(message)
 
-    if message.content.startswith("$help") and not message.content.startswith("$help-admin"):
-        messageStr = "Cardinal Points Bot Commands:\n\n"
-        messageStr += "$points - see how many Cardinal Points you have\n"
-        messageStr += "$points [@user or user#1234] - see how many Cardinal Points someone else has\n"
-        messageStr += "$scoreboard - see the Cardinal Points scoreboard\n"
-        messageStr += "$help-admin - for Cardinal House admins to see their extended list of commands\n"
-
-        await message.channel.send(messageStr)
+        return
 
     if message.content.startswith("$help-admin"):
         messageStr = "Cardinal Points Bot Commands for Admins (see $help for non-admin commands):\n\n"
@@ -231,11 +239,26 @@ async def on_message(message):
 
         await message.channel.send(messageStr)
 
+        return
+
+    if message.content.startswith("$help"):
+        messageStr = "Cardinal Points Bot Commands:\n\n"
+        messageStr += "$points - see how many Cardinal Points you have\n"
+        messageStr += "$points [@user or user#1234] - see how many Cardinal Points someone else has\n"
+        messageStr += "$scoreboard - see the Cardinal Points scoreboard\n"
+        messageStr += "$help-admin - for Cardinal House admins to see their extended list of commands\n"
+
+        await message.channel.send(messageStr)
+
+        return
+
     if message.content.startswith('$hello'):
         await message.channel.send('Greetings from the Cardinal House bot!')
+        return
 
     if message.content.startswith('$getChannelId'):
         await message.channel.send(message.channel.id)
+        return
 
     # Command to set the contract address, time between stat generations, time between stat messages, and the channel ID to message
     '''
