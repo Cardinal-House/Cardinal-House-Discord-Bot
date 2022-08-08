@@ -163,16 +163,16 @@ async def trackLevelUp(message):
         userJson = json.load(userFile)
 
     if "cardinalPoints" not in userJson.keys():
-        userJson["cardinalPoints"] = int(level)
+        userJson["cardinalPoints"] = 1
     else:
-        userJson["cardinalPoints"] += int(level)
+        userJson["cardinalPoints"] += 1
 
     with open(f"users/{user}.json", 'w') as userFile:
         json.dump(userJson, userFile)
 
     newNumPoints = userJson["cardinalPoints"]
 
-    await message.channel.send(f"{user}, you have been awarded {level} Cardinal Points for leveling up! You now have {newNumPoints} Cardinal Points.")
+    # await message.channel.send(f"{user}, you have been awarded {level} Cardinal Points for leveling up! You now have {newNumPoints} Cardinal Points.")
 
 def isReactMessage(message):
     if os.path.exists("data/reactMessages.json"):
