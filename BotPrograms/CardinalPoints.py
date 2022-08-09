@@ -319,7 +319,7 @@ async def setCardinalPoints(message, operation):
             userJson = json.load(userFile)
 
     try:
-        if operation == "set":
+        if operation == "set" or "cardinalPoints" not in userJson.keys():
             userJson["cardinalPoints"] = int(numPoints)
         elif operation == "increase":
             userJson["cardinalPoints"] += int(numPoints)
