@@ -234,7 +234,7 @@ async def on_message(message):
         messageStr += "$points-set [@user or user#1234] [number of points] - Sets the number of Cardinal Points a user has\n"
         messageStr += "$points-increase [@user or user#1234] [number of points] - Increases the number of Cardinal Points a user has\n"
         messageStr += "$points-decrease [@user or user#1234] [number of points] - Decreases the number of Cardinal Points a user has\n"
-        messageStr += "$react-set - Tags a message so that members who react to it get a Cardinal Point\n"
+        messageStr += "$react-set [message ID] - Tags a message so that members who react to it get a Cardinal Point\n"
         messageStr += "$react-clear - Empties the list of messages members can react to to earn Cardinal Points\n"
 
         await message.channel.send(messageStr)
